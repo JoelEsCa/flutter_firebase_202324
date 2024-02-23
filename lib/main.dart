@@ -16,3 +16,10 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+
+/**
+ * 1 ) Tenir node.js instal·lat.
+ * 2) Instal·lar Firebase CLI: npm install -g firebase-tools
+ * 3) Iniciar sessió amb Firebase: firebase login
+ *  - Si dona error el archivo firebase.ps1, cambiarle el nombre o borrarlo
+ */
