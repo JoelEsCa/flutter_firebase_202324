@@ -11,7 +11,7 @@ class TextFieldAuth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
         child: TextField(
           style: const TextStyle(color: Color.fromARGB(255, 154, 69, 0)),
           cursorColor: const Color.fromARGB(255, 255, 100, 0),
