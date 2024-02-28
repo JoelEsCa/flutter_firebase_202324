@@ -12,6 +12,8 @@ class PaginaLogin extends StatefulWidget {
 class _PaginaLoginState extends State<PaginaLogin> {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
+  
+  void ferLogin() {}
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +32,11 @@ class _PaginaLoginState extends State<PaginaLogin> {
                       size: 120,
                       color: Color.fromARGB(255, 255, 240, 218),
                     ),
-              
+
                     const SizedBox(
                       height: 25,
                     ),
-              
+
                     //FRASE
                     const Text(
                       'Benvingut/da de nou',
@@ -44,11 +46,11 @@ class _PaginaLoginState extends State<PaginaLogin> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-              
+
                     const SizedBox(
                       height: 25,
                     ),
-              
+
                     //Text divisori
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25),
@@ -75,7 +77,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                         ],
                       ),
                     ),
-              
+
                     const SizedBox(
                       height: 10,
                     ),
@@ -84,20 +86,20 @@ class _PaginaLoginState extends State<PaginaLogin> {
                         controller: controllerEmail,
                         obscureText: false,
                         hintText: "Email"),
-              
+
                     const SizedBox(
                       height: 10,
                     ),
-              
+
                     //Textfield password
                     TextFieldAuth(
                         controller: controllerPassword,
                         obscureText: true,
                         hintText: "Password"),
-              
+
                     //No estás registrat?
-              
-                     Padding(
+
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -107,18 +109,24 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             width: 5,
                           ),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/registre');
-                            },
-                            child: const Text("Registra't", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue))),
+                              onTap: () {
+                                Navigator.pushNamed(context, '/registre');
+                              },
+                              child: const Text("Registra't",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue))),
                         ],
                       ),
                     ),
-              
+
                     const SizedBox(height: 10),
-              
+
                     //Botó de login
-                    BotoAuth()
+                    BotoAuth(
+                      text: "Login",
+                      onTap: ferLogin,
+                    )
                   ],
                 ),
               ),

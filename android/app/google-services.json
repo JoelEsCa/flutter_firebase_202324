@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "214208815474",
+    "project_id": "basededadeslogin",
+    "storage_bucket": "basededadeslogin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214208815474:android:1d7c18278761a9cf9d3deb",
+        "android_client_info": {
+          "package_name": "com.example.flutter_firebase_202324"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHfOkwqkOXF2uekBsLh89ESrhKrUGtZKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
