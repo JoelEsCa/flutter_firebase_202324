@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 
 class PaginaInici extends StatelessWidget {
   const PaginaInici({super.key});
@@ -14,7 +15,10 @@ class PaginaInici extends StatelessWidget {
         title: const Text("Pàgina inici"),
         actions: [
           IconButton(
-            onPressed: logout, 
+            onPressed: () {
+               final serveiAuth = ServeiAuth();
+                serveiAuth.logout();
+            }, 
             icon: const Icon(Icons.logout),
           ),
         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:flutter_firebase_202324/components/buto_auth.dart';
 import 'package:flutter_firebase_202324/components/text_field_auth.dart';
 
@@ -6,7 +7,7 @@ class PaginaRegistre extends StatefulWidget {
   final void Function() alFerClic;
 
   const PaginaRegistre({
-    super.key, 
+    super.key,
     required this.alFerClic,
   });
 
@@ -22,7 +23,31 @@ class _PaginaRegistreState extends State<PaginaRegistre> {
     final TextEditingController controllerConfirmarPassword =
         TextEditingController();
 
-    void ferRegistre() {}
+    void ferRegistre(BuildContext context) async {
+      final serveiAuth = ServeiAuth();
+      try {
+        if (controllerPassword.text == controllerConfirmarPassword.text) {
+          await serveiAuth.registerambEmailIPassword(
+              controllerEmail.text, controllerPassword.text);
+        } else {
+          // ignore: use_build_context_synchronously
+          showDialog(
+              context: context,
+              builder: (context) => const AlertDialog(
+                    title: Text("Error"),
+                    content: Text("Les contrasenyes no coincideixen"),
+                  ));
+        }
+      } catch (e) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text("Error"),
+                  content: Text(e.toString()),
+                ));
+      }
+    }
 
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 250, 183, 189),
@@ -139,7 +164,7 @@ class _PaginaRegistreState extends State<PaginaRegistre> {
                     //Botó de registre
                     BotoAuth(
                       text: "Registra't",
-                      onTap: ferRegistre,
+                      onTap: () => ferRegistre(context),
                     )
                   ],
                 ),

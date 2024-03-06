@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:flutter_firebase_202324/components/buto_auth.dart';
 import 'package:flutter_firebase_202324/components/text_field_auth.dart';
 
 class PaginaLogin extends StatefulWidget {
-    final void Function() alFerClic;
+  final void Function() alFerClic;
 
   const PaginaLogin({
     super.key,
@@ -17,8 +18,23 @@ class PaginaLogin extends StatefulWidget {
 class _PaginaLoginState extends State<PaginaLogin> {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
-  
-  void ferLogin() {}
+
+  void ferLogin(BuildContext context) async {
+    final serveiAuth = ServeiAuth();
+
+    try {
+      await serveiAuth.loginambEmailIPassword(
+          controllerEmail.text, controllerPassword.text);
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text("Error"),
+                content: Text(e.toString()),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +144,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                     //Botó de login
                     BotoAuth(
                       text: "Login",
-                      onTap: ferLogin,
+                      onTap: () => ferLogin(context),
                     )
                   ],
                 ),
