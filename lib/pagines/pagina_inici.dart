@@ -17,7 +17,7 @@ class PaginaInici extends StatelessWidget {
           IconButton(
             onPressed: () {
                final serveiAuth = ServeiAuth();
-                serveiAuth.logout();
+                serveiAuth.tancarSessio();
             }, 
             icon: const Icon(Icons.logout),
           ),

@@ -27,7 +27,7 @@ class _PaginaRegistreState extends State<PaginaRegistre> {
       final serveiAuth = ServeiAuth();
       try {
         if (controllerPassword.text == controllerConfirmarPassword.text) {
-          await serveiAuth.registerambEmailIPassword(
+          await serveiAuth.registreAmbEmailIPassword(
               controllerEmail.text, controllerPassword.text);
         } else {
           // ignore: use_build_context_synchronously
