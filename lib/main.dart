@@ -24,16 +24,21 @@ class MainApp extends StatelessWidget {
   }
 }
 
-/**
-  1 ) Tenir node.js instal·lat.
-  2) Instal·lar Firebase CLI: npm install -g firebase-tools
-  3) Iniciar sessió amb Firebase: firebase login
-       - Si dona error el archivo firebase.ps1, cambiarle el nombre o borrarlo
-       - Si torna a fer firebase login, veurem en que compte estem registrar
-       - Si volem canviar de compte, fem firebase logout
-  4) Fer dart pub global activate flutterfire_cli
-  5) Vincular projecte local al projecte firebase de la consola: flutterfire configure
-  6) Incloure les llibreries de Firebase que vulguem utilitzar.
+/*
+1) Tenir el Node.js instal·lat.
+2) npm install -g firebase-tools
+3) Fer login a Firebase: firebase login
+    - Si dona error de l'arxiu firebase.ps1, canviar-li el nom (o esborrar-lo
+    i tornar a fer login).
+    - Si tornem a fer firebase login, ens diu en quin compte estem.
+    - Si vulguéssim canviar el compte, fem firebase logout.
+
+4) Fer: dart pub global activate flutterfire_cli
+5) Vincular projecte local amb projecte Firebase de la Consola.
+    - flutterfire configure
+
+6) Incloure les llibreries de Firebase que vulguem utilitzar.
     - flutter pub add firebase_auth
     - flutter pub add firebase_core
- */
+
+*/
