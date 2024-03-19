@@ -14,7 +14,7 @@ class PortalAuth extends StatelessWidget {
         builder: (context, snapshot) {
 
           if (snapshot.hasData) {
-            return const PaginaInici();
+            return PaginaInici();
           } else {
             return const LoginORegistre();
           }
