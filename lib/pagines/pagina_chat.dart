@@ -2,18 +2,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PaginaChat extends StatefulWidget {
-  const PaginaChat({super.key});
+
+  final String emailAmbQuiParlem;
+  const PaginaChat({super.key, 
+  required this.emailAmbQuiParlem});
 
   @override
   State<PaginaChat> createState() => _PaginaChatState();
 }
 
 class _PaginaChatState extends State<PaginaChat> {
+
+  final TextEditingController controllerMensaje = TextEditingController();
+
+    void enviarMissatge() {
+    if(controllerMensaje.text.isNotEmpty) {
+      print(controllerMensaje.text);
+      controllerMensaje.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Pàgina chat"),
+        title: Text('Chat amb ${widget.emailAmbQuiParlem}'),
       ),
       body: Column(
         children: [
@@ -31,7 +44,30 @@ class _PaginaChatState extends State<PaginaChat> {
   }
 
   Widget _construirZonaInputUsuari() {
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(children: [
+         Expanded(
+          child: TextField(
+            controller: controllerMensaje,
+            decoration: InputDecoration(
+              fillColor: Colors.amber[200],
+              filled: true,
+              hintText: 'Escriu un missatge...',
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        IconButton(
+          onPressed: enviarMissatge, 
+          icon: const Icon(Icons.send),
+          color: Colors.white,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.green),
+          )
+        ),
+      ],),
+    );
   }
 
 }
