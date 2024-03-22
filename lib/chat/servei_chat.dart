@@ -37,8 +37,8 @@ class ServeiChat {
     //Construir l'ID de la sala de caht d'aquest missatge
     List<String> idsUsuaris = [idUsuariActual, idReceptor];
     idsUsuaris.sort();
-
     final String idSalaChat = idsUsuaris.join('_');
+    
   await _firestore.collection("Salas_chat").doc(idSalaChat).collection("Missatges").add(nouMissatge.retornaMapaMissatge()); 
 
   }

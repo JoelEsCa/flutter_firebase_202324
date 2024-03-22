@@ -1,11 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_202324/chat/servei_chat.dart';
 
 class PaginaChat extends StatefulWidget {
 
   final String emailAmbQuiParlem;
+  final String idReceptor;
+
   const PaginaChat({super.key, 
-  required this.emailAmbQuiParlem});
+  required this.emailAmbQuiParlem,
+  required this.idReceptor});
 
   @override
   State<PaginaChat> createState() => _PaginaChatState();
@@ -14,9 +18,12 @@ class PaginaChat extends StatefulWidget {
 class _PaginaChatState extends State<PaginaChat> {
 
   final TextEditingController controllerMensaje = TextEditingController();
+  final ServeiChat _serveiChat = ServeiChat();
 
     void enviarMissatge() {
     if(controllerMensaje.text.isNotEmpty) {
+
+      _serveiChat.enviarMissatge(widget.idReceptor, controllerMensaje.text);
       print(controllerMensaje.text);
       controllerMensaje.clear();
     }
