@@ -79,6 +79,14 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
 
           // Visor del resultat del filePicker
 
+          Container(
+            child: _imatgeSeleccionadaWeb == null && _imatgeSeleccionadaApp == null ? 
+            Container() : 
+            kIsWeb ? 
+            Image.memory(_imatgeSeleccionadaWeb!, fit: BoxFit.fill) : 
+            Image.file(_imatgeSeleccionadaApp!, fit: BoxFit.fill),
+          )
+
           //Visor del resutlat de carrregar la imatge de firebase storage
         ],
       ))),
