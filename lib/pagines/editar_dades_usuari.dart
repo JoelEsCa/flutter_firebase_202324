@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditarDadesUsuari extends StatefulWidget {
@@ -42,6 +44,67 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
     }
   }
 
+  Future<bool> pujarImatgePerUsuari() async {
+    String idUsuari = ServeiAuth().getUsuariActual()!.uid;
+
+    Reference ref =
+        FirebaseStorage.instance.ref().child("$idUsuari/avatar/$idUsuari");
+
+    // Agafem l'imagine de la variable que la tingui (la de la web o la de la app)
+
+    if (_imatgeSeleccionadaApp != null) {
+      try {
+        await ref.putFile(_imatgeSeleccionadaApp!);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (_imatgeSeleccionadaWeb != null) {
+      try {
+        await ref.putData(_imatgeSeleccionadaWeb!);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  Future<String> getImatgePerfil() async {
+
+    final String idUsuari = ServeiAuth().getUsuariActual()!.uid;
+
+    Reference ref = FirebaseStorage.instance.ref().child("$idUsuari/avatar/$idUsuari");
+
+    try {
+      String url = await ref.getDownloadURL();
+      return url;
+    } catch (e) {
+      return "";
+    }
+  }
+
+  Widget mostrarImatge() {
+
+    return FutureBuilder(
+      future: getImatgePerfil(),
+    builder: (context, snapshot) {
+
+      if(snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
+        return const Icon(Icons.person);
+      }
+
+      return Image.network(
+      snapshot.data!, 
+      errorBuilder: (context, error, stackTrace) {
+        return const Text("Error al carregar la imatge.");
+      },);
+    },);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +116,6 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
               child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           // Botó per obrir el FilePicker
           GestureDetector(
               onTap: _triaImatge, // Removed the parentheses
@@ -68,7 +130,17 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
           //Botó per pujer la imatge seleccionada al filePicker
 
           GestureDetector(
-              onTap: () {},
+              onTap: () async {
+                if (_imatgeApuntPerPujar) {
+                  bool imatePujadaCorrectamente = await pujarImatgePerUsuari();
+
+                  if (imatePujadaCorrectamente) {
+                    setState(() {
+                      mostrarImatge();
+                    });
+                  }
+                }
+              },
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -80,14 +152,18 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
           // Visor del resultat del filePicker
 
           Container(
-            child: _imatgeSeleccionadaWeb == null && _imatgeSeleccionadaApp == null ? 
-            Container() : 
-            kIsWeb ? 
-            Image.memory(_imatgeSeleccionadaWeb!, fit: BoxFit.fill) : 
-            Image.file(_imatgeSeleccionadaApp!, fit: BoxFit.fill),
-          )
+            child: _imatgeSeleccionadaWeb == null &&
+                    _imatgeSeleccionadaApp == null
+                ? Container()
+                : kIsWeb
+                    ? Image.memory(_imatgeSeleccionadaWeb!, fit: BoxFit.fill)
+                    : Image.file(_imatgeSeleccionadaApp!, fit: BoxFit.fill),
+          ),
 
           //Visor del resutlat de carrregar la imatge de firebase storage
+          Container(
+            child: mostrarImatge(),
+          )
         ],
       ))),
     );
