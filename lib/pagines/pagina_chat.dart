@@ -21,7 +21,6 @@ class _PaginaChatState extends State<PaginaChat> {
 
   final ServeiChat _serveiChat = ServeiChat();
   final ServeiAuth _serveiAuth = ServeiAuth();
-
   final FocusNode focusNode = FocusNode();
 
   @override
@@ -123,7 +122,8 @@ class _PaginaChatState extends State<PaginaChat> {
         alignment: alineament,
         child: BombollaMissatge(
             colorBombolla: colorFons ?? Colors.amber,
-            missatge: data["missatge"]));
+            missatge: data["missatge"],
+            timeStamp: data["timestamp"]),);
   }
 
   Widget _construirZonaInputUsuari() {

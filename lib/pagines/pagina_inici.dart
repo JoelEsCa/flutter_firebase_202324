@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:flutter_firebase_202324/chat/servei_chat.dart';
@@ -16,7 +17,10 @@ class PaginaInici extends StatelessWidget {
 
     _serveiAuth.tancarSessio();
   }
-  
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,13 +28,16 @@ class PaginaInici extends StatelessWidget {
         title: const Text("Pàgina inici"),
         actions: [
           IconButton(
-            onPressed: logout, 
+            onPressed: logout,
             icon: const Icon(Icons.logout),
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const EditarDadesUsuari()));
-            }, 
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const EditarDadesUsuari()));
+            },
             icon: const Icon(Icons.person),
           ),
         ],
@@ -40,43 +47,45 @@ class PaginaInici extends StatelessWidget {
   }
 
   Widget _construeixLlistaUsuaris() {
-
     return StreamBuilder(
-      stream: _serveiChat.getUsuaris(), 
+      stream: _serveiChat.getUsuaris(),
       builder: (context, snapshot) {
-
         // Mirar si hi ha errror.
         if (snapshot.hasError) {
-
           return const Text("Error");
         }
 
         // Esperem que es carreguin les dades.
         if (snapshot.connectionState == ConnectionState.waiting) {
-
           return const Text("Carregant dades...");
         }
 
         // Es retornen les dades.
         return ListView(
-          children: snapshot.data!.map<Widget>(
-            (dadesUsuari) => _construeixItemUsuari(dadesUsuari, context)
-          ).toList(),
+          children: snapshot.data!
+              .map<Widget>(
+                  (dadesUsuari) => _construeixItemUsuari(dadesUsuari, context))
+              .toList(),
         );
       },
     );
   }
 
-  Widget _construeixItemUsuari(Map<String, dynamic> dadesUsuari, BuildContext context) {
-
+  Widget _construeixItemUsuari(
+      Map<String, dynamic> dadesUsuari, BuildContext context) {
     if (dadesUsuari["email"] == _serveiAuth.getUsuariActual()!.email) {
-
       return Container();
     }
-    return ItemUsuari(emailUsuari: dadesUsuari["email"], 
-    onTap: (){
-      Navigator.push(context, 
-      MaterialPageRoute(builder: (context) => PaginaChat(emailAmbQuiParlem: dadesUsuari["email"], idReceptor: dadesUsuari["uid"])));
-    } ,);
+    return ItemUsuari(
+      emailUsuari: dadesUsuari["email"],
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PaginaChat(
+                    emailAmbQuiParlem: dadesUsuari["email"],
+                    idReceptor: dadesUsuari["uid"])));
+      },
+    );
   }
 }

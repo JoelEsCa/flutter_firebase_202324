@@ -15,10 +15,22 @@ class ServeiAuth {
         password: password,
       );
 
-      _firestore.collection("Usuaris").doc(credencialUsuari.user!.uid).set({
-        "uid": credencialUsuari.user!.uid,
-        "email": email,
-      });
+      // Quiero saber si hay un documento en la colección usuaris que tenga el UID de la persona que se acaba de loguear con una query
+      // Si no hay ningun documento con el UID de la persona que se acaba de loguear, entonces se crea un documento con el UID de la persona que se acaba de loguear
+      // Si ya hay un documento con el UID de la persona que se acaba de loguear, entonces no se hace nada
+
+      // Query
+      QuerySnapshot query = await _firestore.collection("Usuaris").where("uid", isEqualTo: credencialUsuari.user!.uid).get();
+
+      // Si ha encontrado algo, entonces no hace nada
+
+      if (query.docs.length == 0) {
+        _firestore.collection("Usuaris").doc(credencialUsuari.user!.uid).set({
+          "uid": credencialUsuari.user!.uid,
+          "email": email,
+          "nom": "",
+        });
+      }
 
       return credencialUsuari;
 

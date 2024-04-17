@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditarDadesUsuari extends StatefulWidget {
   const EditarDadesUsuari({super.key});
@@ -17,6 +19,8 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
   File? _imatgeSeleccionadaApp;
   Uint8List? _imatgeSeleccionadaWeb;
   bool _imatgeApuntPerPujar = false;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _triaImatge() async {
     final ImagePicker _picker = ImagePicker();
@@ -74,10 +78,10 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
   }
 
   Future<String> getImatgePerfil() async {
-
     final String idUsuari = ServeiAuth().getUsuariActual()!.uid;
 
-    Reference ref = FirebaseStorage.instance.ref().child("$idUsuari/avatar/$idUsuari");
+    Reference ref =
+        FirebaseStorage.instance.ref().child("$idUsuari/avatar/$idUsuari");
 
     try {
       String url = await ref.getDownloadURL();
@@ -88,21 +92,96 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
   }
 
   Widget mostrarImatge() {
-
     return FutureBuilder(
       future: getImatgePerfil(),
-    builder: (context, snapshot) {
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.hasError) {
+          return const Icon(Icons.person);
+        }
 
-      if(snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
-        return const Icon(Icons.person);
-      }
+        return Image.network(
+          snapshot.data!,
+          errorBuilder: (context, error, stackTrace) {
+            return const Text("Error al carregar la imatge.");
+          },
+        );
+      },
+    );
+  }
 
-      return Image.network(
-      snapshot.data!, 
-      errorBuilder: (context, error, stackTrace) {
-        return const Text("Error al carregar la imatge.");
-      },);
-    },);
+  Padding getMail() {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 10.0, top: 20.0), // Ajusta los valores según tus necesidades
+      child: Text(ServeiAuth()
+              .getUsuariActual()!
+              .email!
+              .toString() // Ajusta el tamaño de la fuente según tus necesidades
+          ),
+    );
+  }
+
+  final TextEditingController nomController = TextEditingController();
+
+  Widget? nomUsuari() {
+    return FutureBuilder(
+      future: getNom(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        print(snapshot.data.toString());
+
+        String nom = (snapshot.data != null) ? snapshot.data.toString() : "";
+        nomController.text = nom;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+                decoration: const InputDecoration(
+                  hintText: "Introdueix el teu nom",
+                  labelText: "Nom",
+                ),
+                controller: nomController),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  // Con el usuario logeado, le asignamos el nombre que ha introducido
+                  final String idUsuari = ServeiAuth().getUsuariActual()!.uid;
+                  _firestore.collection("Usuaris").doc(idUsuari).update({
+                    "nom": nomController.text,
+                  }).then((_) {
+                    print('Nombre actualizado con éxito');
+                  }).catchError((error) {
+                    print('Error al actualizar el nombre: $error');
+                  });
+                });
+              },
+              child: const Text("Guardar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> getNom() async {
+    final String idUsuari = ServeiAuth().getUsuariActual()!.uid;
+    String nom = "";
+
+    var doc = await _firestore.collection("Usuaris").doc(idUsuari).get();
+    if (doc.exists && doc.data() != null) {
+      nom = doc.data()!["nom"] ?? "";
+    }
+
+    return nom;
   }
 
   @override
@@ -116,6 +195,12 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
               child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          getMail(),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+            child: nomUsuari(),
+          ),
+          const SizedBox(height: 20.0),
           // Botó per obrir el FilePicker
           GestureDetector(
               onTap: _triaImatge, // Removed the parentheses
