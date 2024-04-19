@@ -1,4 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:flutter_firebase_202324/chat/servei_chat.dart';
@@ -17,9 +16,6 @@ class PaginaInici extends StatelessWidget {
 
     _serveiAuth.tancarSessio();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {

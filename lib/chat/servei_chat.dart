@@ -1,19 +1,27 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_202324/models/missatge.dart';
 
 class ServeiChat {
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Future<Map<String, dynamic>> getUsuariPerEmail(String email) async {
+    QuerySnapshot query = await _firestore
+        .collection("Usuaris")
+        .where("email", isEqualTo: email)
+        .get();
+
+    if (query.docs.length == 0) {
+      return {};
+    } else {
+      return query.docs[0].data() as Map<String, dynamic>;
+    }
+  }
+
   Stream<List<Map<String, dynamic>>> getUsuaris() {
-
     return _firestore.collection("Usuaris").snapshots().map((event) {
-
       return event.docs.map((document) {
-
         final usuari = document.data();
         return usuari;
       }).toList();
@@ -21,10 +29,9 @@ class ServeiChat {
   }
 
   Future<void> enviarMissatge(String idReceptor, String missatge) async {
-      
-      final String idUsuariActual = _auth.currentUser!.uid;
-      final String emailUsuariActual = _auth.currentUser!.email!;
-      final Timestamp timestamp = Timestamp.now();
+    final String idUsuariActual = _auth.currentUser!.uid;
+    final String emailUsuariActual = _auth.currentUser!.email!;
+    final Timestamp timestamp = Timestamp.now();
 
     Missatge nouMissatge = Missatge(
       idAutor: idUsuariActual,
@@ -39,18 +46,24 @@ class ServeiChat {
     idsUsuaris.sort();
     final String idSalaChat = idsUsuaris.join('_');
 
-  await _firestore.collection("Salas_chat").doc(idSalaChat).collection("Missatges").add(nouMissatge.retornaMapaMissatge()); 
-
+    await _firestore
+        .collection("Salas_chat")
+        .doc(idSalaChat)
+        .collection("Missatges")
+        .add(nouMissatge.retornaMapaMissatge());
   }
 
   Stream<QuerySnapshot> getMissatges(String idUsuariActual, idReceptor) {
-    
     // Volem trobar la Salachat formada per l'ID dels dos usuaris.
     List<String> idsUsuaris = [idUsuariActual, idReceptor];
     idsUsuaris.sort();
     String idSalaChat = idsUsuaris.join('_');
 
-    return _firestore.collection("Salas_chat").doc(idSalaChat).collection("Missatges").orderBy("timestamp", descending: false).snapshots();
-
+    return _firestore
+        .collection("Salas_chat")
+        .doc(idSalaChat)
+        .collection("Missatges")
+        .orderBy("timestamp", descending: false)
+        .snapshots();
   }
 }

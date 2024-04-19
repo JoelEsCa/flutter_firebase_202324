@@ -35,9 +35,9 @@ class _PaginaChatState extends State<PaginaChat> {
 
     focusNode.addListener(() {
       Future.delayed(
-      const Duration(milliseconds: 500),
-      () => ferScrollCapAvall(),
-    );
+        const Duration(milliseconds: 500),
+        () => ferScrollCapAvall(),
+      );
     });
 
     Future.delayed(
@@ -45,7 +45,6 @@ class _PaginaChatState extends State<PaginaChat> {
       () => ferScrollCapAvall(),
     );
   }
-
 
   void ferScrollCapAvall() {
     controllerScroll.animateTo(
@@ -65,11 +64,31 @@ class _PaginaChatState extends State<PaginaChat> {
     ferScrollCapAvall();
   }
 
+  Widget ambQuiParlem() {
+    return FutureBuilder(
+      future: _serveiChat.getUsuariPerEmail(widget.emailAmbQuiParlem),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final String? nomUsuari = snapshot.data['nom'];
+          if (nomUsuari != null && nomUsuari != "") {
+            return Text('Chat amb ${nomUsuari}');
+          } else {
+            return Text('Chat amb ${widget.emailAmbQuiParlem}');
+          }
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat amb ${widget.emailAmbQuiParlem}'),
+        title: ambQuiParlem(),
       ),
       body: Column(children: [
         //Zona Missatges
@@ -119,11 +138,12 @@ class _PaginaChatState extends State<PaginaChat> {
     var colorFons = esUsuariActual ? Colors.green[200] : Colors.amber[222];
 
     return Container(
-        alignment: alineament,
-        child: BombollaMissatge(
-            colorBombolla: colorFons ?? Colors.amber,
-            missatge: data["missatge"],
-            timeStamp: data["timestamp"]),);
+      alignment: alineament,
+      child: BombollaMissatge(
+          colorBombolla: colorFons ?? Colors.amber,
+          missatge: data["missatge"],
+          timeStamp: data["timestamp"]),
+    );
   }
 
   Widget _construirZonaInputUsuari() {
