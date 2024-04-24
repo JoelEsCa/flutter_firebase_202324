@@ -16,6 +16,7 @@ class EditarDadesUsuari extends StatefulWidget {
 }
 
 class EditarDadesUsuariState extends State<EditarDadesUsuari> {
+  bool _imatgeSeleccionada = false;
   File? _imatgeSeleccionadaApp;
   Uint8List? _imatgeSeleccionadaWeb;
   bool _imatgeApuntPerPujar = false;
@@ -47,6 +48,15 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
       }
     }
   }
+
+  void recargarPagina() {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (BuildContext context) => super.widget,
+    ),
+  );
+}
 
   Future<bool> pujarImatgePerUsuari() async {
     String idUsuari = ServeiAuth().getUsuariActual()!.uid;
@@ -100,11 +110,18 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
           return const Icon(Icons.person);
         }
 
-        return Image.network(
-          snapshot.data!,
-          errorBuilder: (context, error, stackTrace) {
-            return const Text("Error al carregar la imatge.");
-          },
+        return Center(
+          child: Container(
+            width: 600,
+            height: 600,
+            child: Image.network(
+              snapshot.data!,
+              errorBuilder: (context, error, stackTrace) {
+                return const Text("Error al carregar la imatge.");
+              },
+              fit: BoxFit.cover,
+            ),
+          ),
         );
       },
     );
@@ -150,6 +167,7 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
                   labelText: "Nom",
                 ),
                 controller: nomController),
+            const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -201,38 +219,51 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
             child: nomUsuari(),
           ),
           const SizedBox(height: 20.0),
-          // Botó per obrir el FilePicker
-          GestureDetector(
-              onTap: _triaImatge, // Removed the parentheses
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.blue[400],
-                ),
-                child: const Text("Tria imatge"),
-              )),
 
-          //Botó per pujer la imatge seleccionada al filePicker
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(
+              children: [
+                // Botó per obrir el FilePicker
+                GestureDetector(
+                    onTap: _triaImatge, // Removed the parentheses
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[400],
+                      ),
+                      child: const Text("Tria imatge"),
+                    )),
 
-          GestureDetector(
-              onTap: () async {
-                if (_imatgeApuntPerPujar) {
-                  bool imatePujadaCorrectamente = await pujarImatgePerUsuari();
+                const SizedBox(width: 10.0),
+                
+                //Botó per pujer la imatge seleccionada al filePicker
+                GestureDetector(
+                    onTap: () async {
+                      if (_imatgeApuntPerPujar) {
+                        bool imatePujadaCorrectamente =
+                            await pujarImatgePerUsuari();
 
-                  if (imatePujadaCorrectamente) {
-                    setState(() {
-                      mostrarImatge();
-                    });
-                  }
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.blue[400],
-                ),
-                child: const Text("Puja imatge"),
-              )),
+                        if (imatePujadaCorrectamente) {
+                          //setState(() {
+                            //mostrarImatge();
+                          //} );
+                          recargarPagina();
+                        }
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[400],
+                      ),
+                      child: const Text("Puja imatge"),
+                    )),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20.0),
 
           // Visor del resultat del filePicker
 
