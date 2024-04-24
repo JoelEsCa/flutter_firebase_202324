@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class EditarDadesUsuari extends StatefulWidget {
 }
 
 class EditarDadesUsuariState extends State<EditarDadesUsuari> {
-  bool _imatgeSeleccionada = false;
   File? _imatgeSeleccionadaApp;
   Uint8List? _imatgeSeleccionadaWeb;
   bool _imatgeApuntPerPujar = false;
@@ -236,7 +234,7 @@ class EditarDadesUsuariState extends State<EditarDadesUsuari> {
                     )),
 
                 const SizedBox(width: 10.0),
-                
+
                 //Botó per pujer la imatge seleccionada al filePicker
                 GestureDetector(
                     onTap: () async {

@@ -1,6 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_202324/auth/servei_auth.dart';
 import 'package:flutter_firebase_202324/chat/servei_chat.dart';
 
 class ItemUsuari extends StatelessWidget {
@@ -9,7 +8,6 @@ class ItemUsuari extends StatelessWidget {
 
   ItemUsuari({super.key, required this.emailUsuari, required this.onTap});
 
-  final ServeiAuth _serveiAuth = ServeiAuth();
   final ServeiChat _serveiChat = ServeiChat();
 
   Future<String> getImatgePerfil() async {
